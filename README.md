@@ -18,5 +18,8 @@ docker-labs/
     └── ...
 ```
 ## 1. Docker App (sample JS APP)
+
 ## 2. Docker Python App
+Run the code
+> python rng.py
 
