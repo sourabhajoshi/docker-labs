@@ -22,4 +22,5 @@ docker-labs/
 ## 2. Docker Python App
 Run the code
 > python rng.py
+> docker run -it basic-python-app
 
