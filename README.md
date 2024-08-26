@@ -1,7 +1,7 @@
 # docker-labs
 This repository consist of multiple docker applications.
 
-### A typical top-level directory layout
+A typical top-level directory layout
 ```
 docker-labs/
 ├── project1/
