@@ -1,6 +1,5 @@
 # docker-labs
-
-> Folder structure options and naming conventions for software projects
+This repository consist of multiple docker applications.
 
 ### A typical top-level directory layout
 ```
