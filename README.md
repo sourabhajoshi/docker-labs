@@ -3,7 +3,7 @@
 > Folder structure options and naming conventions for software projects
 
 ### A typical top-level directory layout
-.
+```
 docker-labs/
 ├── project1/
 │   ├── Dockerfile
@@ -17,4 +17,5 @@ docker-labs/
     ├── Dockerfile
     ├── service/
     └── ...
+```
 
