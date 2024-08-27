@@ -27,11 +27,11 @@ Run the code
 ## 3. Feedback node
 Build image
 > docker build -t feedback-node .
-Start container
+####Start container
 > docker run -p 3000:80 -d --name feedback-app -d --rm feedback-node
-> --rm remove container once after stop the container
-Stop container
+#### --rm remove container once after stop the container
+####Stop container
 > docker stop feedback-app
-Start container
+####Start container
 > docker start feedback-app
 
