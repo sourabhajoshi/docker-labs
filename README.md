@@ -1392,3 +1392,197 @@ docker run -p 5000:5000 myapp
 - Assigns private IP
 - Configures NAT (Network Address Translation)
 - Forwards host port 5000 → container port 5000
+
+### Multi-Stage Build in Docker
+
+Using multiple FROM instructions in one Dockerfile to separate build environment and runtime environment.
+
+Multi-stage build is a Docker feature that allows us to use multiple FROM instructions in a single Dockerfile. The first stage is used to build the application, and the final stage copies only the required artifacts. This helps reduce image size, improve security, and optimize performance.
+
+Multi-stage build ಅಂದ್ರೆ ಒಂದೇ Dockerfile ನಲ್ಲಿ ಹಲವು FROM instructions ಬಳಸುವ ವಿಧಾನ. ಮೊದಲ stage ನಲ್ಲಿ application build ಮಾಡಲಾಗುತ್ತದೆ, ಮತ್ತು final stage ನಲ್ಲಿ ಅಗತ್ಯವಿರುವ files ಮಾತ್ರ copy ಮಾಡಲಾಗುತ್ತದೆ. ಇದರಿಂದ image size ಕಡಿಮೆ ಆಗುತ್ತದೆ, security ಉತ್ತಮವಾಗುತ್ತದೆ ಮತ್ತು performance improve ಆಗುತ್ತದೆ.
+
+It helps:
+- Reduce image size
+- Improve security
+- Remove unnecessary build tools
+
+Problem Without Multi-Stage
+- If you build app normally:
+- Install compiler
+- Install dependencies
+- Install build tools
+- App files
+
+Final image contains: Build tools, Compilers and Extra files
+
+So image becomes BIG.
+
+**Without Multi-Stage Build Node App Example**
+```
+FROM node:18
+
+WORKDIR /app
+COPY package.json .
+RUN npm install
+
+COPY . .
+RUN npm run build
+
+CMD ["node","dist/app.js"]
+```
+Problem:
+- node_modules
+- build cache
+- dev dependencies
+- npm
+- full Node image
+Everything stays in final image.
+
+**With Multi-Stage Build**
+```
+# Stage 1 - Builder
+FROM node:18 AS builder
+
+WORKDIR /app
+COPY package.json .
+RUN npm install
+COPY . .
+RUN npm run build
+
+# Stage 2 - Production
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy only build output
+COPY --from=builder /app/dist ./dist
+
+CMD ["node","dist/app.js"]
+```
+Stage 1:
+- We build the app
+- We create dist folder
+
+Stage 2:
+- We only copy dist folder
+- We ignore build tools
+
+Final image is SMALL
+
+**Simple beginner python example**
+
+We will:
+- Create a simple Python app
+- Install dependency
+- Use multi-stage
+- Keep final image SMALL
+
+STEP 1 – Create Simple Python File
+
+Create file:
+```
+#app.py
+print("Hello Multi-Stage Python Docker!")
+```
+That’s it 
+
+First See Normal Dockerfile (Without Multi-Stage)
+```
+FROM python:3.11
+
+WORKDIR /app
+COPY . .
+
+RUN pip install requests
+
+CMD ["python", "app.py"]
+```
+Final image contains:
+- Python
+- pip
+- build tools
+- cache files
+- everything
+
+Image is bigger than needed.
+
+Now Multi-Stage Version (Very Simple)
+```
+# Stage 1 - Builder
+FROM python:3.11 AS builder
+
+WORKDIR /app
+
+COPY app.py .
+RUN pip install requests --user
+
+
+# Stage 2 - Final Image
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy installed packages from builder
+COPY --from=builder /root/.local /root/.local
+
+# Copy app file
+COPY --from=builder /app/app.py .
+
+ENV PATH=/root/.local/bin:$PATH
+
+CMD ["python", "app.py"]
+```
+What Happened?
+
+Stage 1 (Builder Stage)
+- Uses full Python image
+- Installs dependency
+- Builds environment
+- Heavy stage.
+
+Stage 2 (Final Stage)
+- Uses smaller image: python:3.11-slim
+- Copies only installed packages
+- Copies only app file
+- No build tools
+
+Final image = Smaller 
+
+Build and Run
+
+Build:
+```docker build -t hello-python```
+
+Run:
+```docker run hello-python```
+
+Output:
+```Hello Multi-Stage Python Docker!```
+
+What Final Image Contains?
+
+ONLY:
+```
+Slim Python
++
+Installed packages
++
+app.py
+```
+
+NOT:
+- pip cache
+- unnecessary build files
+- full heavy image
+
+Stage 1 = Install everything and Stage 2 = Keep only what is needed
+
+**Why Multi-Stage Is Useful?**
+- Smaller image
+- Faster deployment
+- Better security
+- Clean production image
+
+Build big but Run small
+
+
