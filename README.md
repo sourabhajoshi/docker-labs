@@ -1187,3 +1187,208 @@ ENV Works Internally
 - Available to running container
 
 ARG is available in Build only but ENV is avilable in Build and Run
+
+### **9. EXPOSE Instruction**
+
+EXPOSE tells Docker, This container listens on this port. It is documentation inside the image. EXPOSE does NOT publish the port to your system automatically.
+
+The EXPOSE instruction informs Docker that the container listens on a specific port. It does not publish the port to the host. Port mapping must be done using the -p option in the docker run command.
+
+EXPOSE instruction container ಯಾವ port ನಲ್ಲಿ listen ಮಾಡುತ್ತದೆ ಎಂದು ತಿಳಿಸುತ್ತದೆ. ಇದು port publish ಮಾಡುವುದಿಲ್ಲ. Port mapping ಮಾಡಲು docker run ನಲ್ಲಿ -p option ಬಳಸಬೇಕು.
+
+```
+#Basic syntax
+EXPOSE <port>
+
+EXPOSE 5000
+```
+Simple example: python app
+```
+FROM python:3.11
+WORKDIR /app
+COPY app.py .
+EXPOSE 5000
+CMD ["python","app.py"]
+```
+- Container listens on port 5000
+- But it is not accessible from outside yet
+
+EXPOSE does NOT open port. To access container from host run ```docker run -p 5000:5000 myapp```.
+Here:
+- First 5000 is Host port
+- Second 5000 is Container port
+
+EXPOSE vs -p
+```
+| EXPOSE            | -p (Port Mapping)  |
+| ----------------- | ------------------ |
+| Documentation     | Actually maps port |
+| Inside Dockerfile | Used in docker run |
+| Does not publish  | Publishes port     |
+```
+
+simple app: Node app
+```
+FROM node:18
+WORKDIR /app
+COPY . .
+EXPOSE 3000
+CMD ["node","app.js"]
+```
+run this ```docker run -p 3000:3000 mynodeapp```. Access via ```http://localhost:3000```.
+
+- Always use EXPOSE in Dockerfile
+- Always use -p in docker run
+- Document correct container port 
+
+### **10. LABEL Instruction**
+
+LABEL is used to add metadata (information) to a Docker image. It only stores information like Author, version, description, project name, maintainer and so on.
+
+LABEL instruction Docker image ಗೆ metadata add ಮಾಡುತ್ತದೆ. Version, author, description ಹೀಗೆ ಮಾಹಿತಿ store ಮಾಡಲು ಬಳಸಲಾಗುತ್ತದೆ. ಇದು container runtime behavior ಮೇಲೆ ಪರಿಣಾಮ ಬೀರುವುದಿಲ್ಲ, documentation ಮತ್ತು management ಗೆ ಉಪಯೋಗವಾಗುತ್ತದೆ.
+
+```
+#basic syntax
+LABEL key=value
+
+LABER Author="Joshi"
+
+#multiple labels
+LABEL version="1.0" \
+      description="Python Application" \
+      maintainer="joshi@example.com"
+
+LABEL version="1.0" description="My App"
+```
+Simple app
+```
+FROM python:3.11
+
+LABEL app="MyPythonApp" \
+      version="1.0" \
+      maintainer="sourabha@example.com"
+
+WORKDIR /app
+COPY . .
+CMD ["python","app.py"]
+```
+After build image ```docker inspect myapp```. you see
+```
+"Labels": {
+    "app": "MyPythonApp",
+    "version": "1.0",
+    "maintainer": "sourabha@example.com"
+}
+```
+
+### **10. VOLUME Instruction**
+
+VOLUME is used to create a mount point for persistent data inside a container. It tells Docker Store data from this folder outside the container.
+
+This means:
+- Data will NOT be lost if container is removed.
+- Data is stored separately from image layers.
+
+VOLUME instruction container ಒಳಗೆ persistent storage mount point define ಮಾಡುತ್ತದೆ. Container delete ಆದರೂ ಆ directory ಒಳಗಿನ data ಉಳಿಯುತ್ತದೆ. Volume data container writable layer ಹೊರಗೆ store ಆಗುತ್ತದೆ.
+
+```
+#Basic syntax
+VOLUME /data
+
+FROM ubuntu
+VOLUME /data
+```
+
+Simple Node example. Suppose you have a Node app that stores files in ```/app/uploads```.
+```
+FROM node:18
+WORKDIR /app
+COPY . .
+VOLUME /app/uploads
+CMD ["node","app.js"]
+```
+Now ```/app/uploads``` becomes persistent storage.
+
+Without VOLUME:
+- Data stored in writable layer
+- If container deleted, data lost
+
+With VOLUME:
+- Data stored outside container
+- Container deleted, data remains
+
+```
+Image Layers (read-only)
++
+Container Writable Layer
++
+Volume (external storage)
+```
+
+Even without Dockerfile VOLUME, you can mount manually
+```
+docker run -v myvolume:/app/data myapp
+```
+
+VOLUME in Dockerfile vs -v in docker run
+```
+| VOLUME (Dockerfile)         | -v (docker run)        |
+| --------------------------- | ---------------------- |
+| Declares mount point        | Actually mounts volume |
+| Inside image                | At runtime             |
+| Documentation + auto-create | Manual control         |
+```
+VOLUME is Declare storage and -v = Attach storage
+
+### **10. USER Instruction**
+
+USER defines which user will run the next instructions and the container.
+
+By default, Docker containers run as root user. Using USER, you can switch to Non-root user (recommended for security).
+
+USER instruction container ಯಾವ user ಮೂಲಕ run ಆಗಬೇಕು ಎಂದು define ಮಾಡುತ್ತದೆ. Default ಆಗಿ container root ಆಗಿ run ಆಗುತ್ತದೆ. ಆದರೆ production ನಲ್ಲಿ non-root user ಬಳಸುವುದು security ಗಾಗಿ ಉತ್ತಮ.
+```
+FROM python:3.11
+
+# Create new user
+RUN useradd -m appuser
+
+WORKDIR /app
+COPY . .
+
+# Switch to non-root user
+USER appuser
+
+CMD ["python","app.py"]
+``` 
+
+### Docker Port Mapping
+
+Port mapping connects Host machine port to container port. It allows you to access the container application from your system or browser.
+
+Without port mapping:
+- Container runs
+- But you cannot access it from outside 
+
+Host port means Port on your local machine (example: 5000). ನಿಮ್ಮ computer ನಲ್ಲಿ ಇರುವ port.
+
+Container port means Port inside the container where app is running. Container ಒಳಗೆ app listen ಮಾಡುತ್ತಿರುವ port.
+
+Port mapping ಅಂದ್ರೆ host machine port ಅನ್ನು container port ಗೆ connect ಮಾಡುವುದು. Container isolated network ನಲ್ಲಿ private IP ಹೊಂದಿರುವುದರಿಂದ ಹೊರಗಿನಿಂದ access ಮಾಡಲು -p option ಬಳಸಬೇಕು. ಇದು NAT ಮೂಲಕ traffic forward ಮಾಡುತ್ತದೆ.
+
+```
+#basic syntax
+docker run -p HOST_PORT:CONTAINER_PORT image_name
+
+docker run -p 5000:5000 myapp
+```
+
+when we run 
+```
+docker run -p 5000:5000 myapp
+```
+- Creates container
+- Sets up network namespace
+- Assigns private IP
+- Configures NAT (Network Address Translation)
+- Forwards host port 5000 → container port 5000
