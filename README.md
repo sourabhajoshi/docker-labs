@@ -1051,3 +1051,139 @@ Exec form
 RUN ["apt-get", "update"]
 ```
 Shell form is most commonly used
+
+### **6. CMD Instruction**
+
+CMD defines the default command that runs when a container starts. It runs during ```docker run``` NOT during docker build.
+
+CMD ಅಂದ್ರೆ container start ಆದಾಗ run ಆಗುವ default command.
+
+The CMD instruction defines the default command that runs when a container starts. It executes during docker run, not during docker build. Only one CMD is allowed in a Dockerfile, and it can be overridden at runtime.
+
+CMD instruction container start ಆದಾಗ run ಆಗುವ default command define ಮಾಡುತ್ತದೆ. ಇದು docker build ಸಮಯದಲ್ಲಿ ಅಲ್ಲ, docker run ಸಮಯದಲ್ಲಿ execute ಆಗುತ್ತದೆ. ಒಂದೇ CMD effective ಆಗುತ್ತದೆ ಮತ್ತು runtime ನಲ್ಲಿ override ಮಾಡಬಹುದು.
+
+```
+Basic syntax
+
+#Exec Form
+CMD ["python", "app.py"]
+
+#Shell Form
+CMD python app.py
+```
+
+Simple example
+```
+FROM python:3.11
+WORKDIR /app
+COPY app.py .
+CMD ["python", "app.py"]
+```
+- Image builds
+- Container runs
+- CMD starts python app.py
+- Program executes
+
+```
+RUN pip install flask
+CMD ["python", "app.py"]
+```
+Run command install flask and CMD runs the application
+
+CMD Can Be Overridden by ```docker run myapp python test.py```. This command overrides ```CMD ["python", "app.py"]```. Now it run as ```python test.py```.
+
+### **7. ENTRYPOINT Instruction**
+
+ENTRYPOINT defines the main command that will always run when the container starts. This container is meant to run this program.
+
+ENTRYPOINT ಅಂದ್ರೆ container start ಆದಾಗ ಯಾವಾಗಲೂ run ಆಗುವ main command.
+
+ENTRYPOINT defines the main command that always runs when a container starts. It makes the container behave like a fixed executable. Unlike CMD, it is not easily overridden. ENTRYPOINT is often combined with CMD to provide default arguments.
+
+ENTRYPOINT container start ಆದಾಗ ಯಾವಾಗಲೂ run ಆಗುವ main command define ಮಾಡುತ್ತದೆ. ಇದು container ಅನ್ನು executable ಹಾಗೆ behave ಮಾಡಿಸುತ್ತದೆ. CMD ಗಿಂತ override ಮಾಡುವುದು ಕಷ್ಟ. CMD ಜೊತೆಗೆ default arguments ನೀಡಲು ಬಳಸಬಹುದು.
+```
+#Basic syntax
+
+#Exec form
+ENTRYPOINT ["python", "app.py"]
+
+#Shell form
+ENTRYPOINT python app.py
+```
+Exec form is recommended.
+
+ENTRYPOINT vs CMD
+```
+| CMD                      | ENTRYPOINT                             |
+| ------------------------ | -------------------------------------- |
+| Default command          | Main fixed command                     |
+| Can be overridden easily | Hard to override                       |
+| Optional                 | Makes container behave like executable |
+```
+
+CMD is default but ENTRYPOINT is mandatory 
+
+### **8. ENV Instruction**
+
+ENV is used to set environment variables inside a Docker image.
+
+These variables:
+- Are available during build
+- Are available when container runs
+- Stay inside the container
+
+it's like ```export VARIABLE=value``` in linux.
+
+The ENV instruction sets environment variables inside a Docker image. These variables are available during both build and runtime and remain inside the container. ENV is commonly used for application configuration and runtime settings.
+
+ENV instruction container ಒಳಗೆ environment variables set ಮಾಡುತ್ತದೆ. ಇದು build ಮತ್ತು runtime ಎರಡರಲ್ಲೂ available ಇರುತ್ತದೆ. Application configuration ಮತ್ತು runtime settings ಗಾಗಿ ಬಳಸಲಾಗುತ್ತದೆ.
+```
+#Basic syntax
+ENV KEY=value
+
+#single variable
+ENV APP_ENV=production
+
+#multiple variables
+ENV APP_ENV=production \
+    PORT=5000 \
+    DEBUG=false
+```
+
+Simple example
+```
+FROM python:3.11
+WORKDIR /app
+ENV APP_ENV=production
+COPY app.py .
+CMD ["python","app.py"]
+```
+Now inside container if we run ```echo $APP_ENV``` will print ```production```.
+
+ENV is used for Used for:
+- App configuration
+- Port numbers
+- Database URLs
+- API keys
+- Runtime settings
+
+Instead of hardcoding values in code.
+
+ENV vs ARG
+```
+| ENV                     | ARG                       |
+| ----------------------- | ------------------------- |
+| Available at build time | Available at build time   |
+| Available at run time   | NOT available at run time |
+| Stored in image         | Not stored permanently    |
+```
+
+we can override ENV using ```docker run -e APP_ENV=development myapp```. Now container uses development.
+
+ENV Works Internally
+- ENV creates a new image layer
+- Variables stored in image metadata
+- Available to all future instructions
+- Available to running container
+
+ARG is available in Build only but ENV is avilable in Build and Run
