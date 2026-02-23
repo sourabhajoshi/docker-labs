@@ -1281,7 +1281,7 @@ After build image ```docker inspect myapp```. you see
 }
 ```
 
-### **10. VOLUME Instruction**
+### **11. VOLUME Instruction**
 
 VOLUME is used to create a mount point for persistent data inside a container. It tells Docker Store data from this folder outside the container.
 
@@ -1340,7 +1340,7 @@ VOLUME in Dockerfile vs -v in docker run
 ```
 VOLUME is Declare storage and -v = Attach storage
 
-### **10. USER Instruction**
+### **12. USER Instruction**
 
 USER defines which user will run the next instructions and the container.
 
