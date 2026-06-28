@@ -1,3 +1,64 @@
+```
+Docker Learning Roadmap
+Goal: Complete Docker from beginner to advanced with the best YouTube resources.
+
+Phase 1 - Docker Basics (Hindi)
+Primary Course: M Prashant - Docker Full Course (Hindi)
+•	What is Docker?
+•	Problems Docker solves
+•	Virtual Machine vs Docker
+•	Docker Architecture
+•	Installing Docker
+•	Docker Images
+•	Docker Containers
+•	Basic Docker Commands
+•	Docker Hub
+•	Dockerfile
+•	Building Images
+•	Docker Image Layers (Basics)
+•	Docker Volumes
+•	Bind Mounts
+•	Docker Networking (Basics)
+•	Environment Variables
+•	Docker Compose
+•	Multi-container Applications
+•	Container Logs
+•	docker exec
+•	Port Mapping
+•	Practical Examples
+Phase 2 - Advanced Topics (Learn Separately)
+Topic	Recommended YouTube Channel
+Multi-stage Docker Builds	TechWorld with Nana
+Docker BuildKit	TechWorld with Nana
+Docker Swarm	TechWorld with Nana / Bret Fisher
+Docker Security	TechWorld with Nana
+Private Docker Registry	TechWorld with Nana
+Advanced Docker Networking	TechWorld with Nana
+Docker Secrets	TechWorld with Nana
+Docker Health Checks	TechWorld with Nana
+Docker Logging Drivers	TechWorld with Nana
+Docker Resource Limits	TechWorld with Nana
+Advanced Docker Volumes	TechWorld with Nana
+Advanced Docker Compose	TechWorld with Nana
+Dockerizing Django	Dennis Ivy / Very Academy / CodeWithHarry
+PostgreSQL + Docker	TechWorld with Nana
+Redis + Celery + Docker	Dennis Ivy / TestDriven.io
+Nginx + Docker	TechWorld with Nana
+.env Management	TechWorld with Nana
+Docker in CI/CD	TechWorld with Nana
+Image Optimization	TechWorld with Nana
+Container Debugging	TechWorld with Nana
+Docker + Kubernetes	TechWorld with Nana
+Recommended Learning Order
+1.	1. M Prashant (Hindi) - Docker Basics
+2.	2. TechWorld with Nana - Advanced Docker
+3.	3. Dennis Ivy - Docker + Django + PostgreSQL + Nginx
+4.	4. TestDriven.io - Docker + Celery + Redis
+5.	5. TechWorld with Nana - Kubernetes
+6.	6. Learn Helm
+7.	7. Learn GitHub Actions / GitLab CI
+```
+
 # docker-labs  
 This repository consist of multiple docker applications.
 
