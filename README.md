@@ -26,6 +26,7 @@ Primary Course: M Prashant - Docker Full Course (Hindi)
 •	docker exec
 •	Port Mapping
 •	Practical Examples
+
 Phase 2 - Advanced Topics (Learn Separately)
 Topic	Recommended YouTube Channel
 Multi-stage Docker Builds	TechWorld with Nana
@@ -49,7 +50,9 @@ Docker in CI/CD	TechWorld with Nana
 Image Optimization	TechWorld with Nana
 Container Debugging	TechWorld with Nana
 Docker + Kubernetes	TechWorld with Nana
-Recommended Learning Order
+
+
+Learning Order
 1.	1. M Prashant (Hindi) - Docker Basics
 2.	2. TechWorld with Nana - Advanced Docker
 3.	3. Dennis Ivy - Docker + Django + PostgreSQL + Nginx
