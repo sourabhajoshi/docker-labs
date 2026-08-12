@@ -6,7 +6,7 @@ Docker ಅಂದ್ರೆ ನಿಮ್ಮ application-ನ್ನು ಅದರ ಎ
 
 **Real Life Example**
 
-Imagine you built a Python application on your laptop.
+Imagine you built a Python application on your laptop.    
 
 On your system:
 - Python 3.11 installed
