@@ -14,7 +14,7 @@ Primary Course: M Prashant - Docker Full Course (Hindi)
 •	Basic Docker Commands
 •	Docker Hub
 •	Dockerfile
-•	Building Images
+•	Building Images   
 •	Docker Image Layers (Basics)
 •	Docker Volumes
 •	Bind Mounts
