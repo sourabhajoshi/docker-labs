@@ -5,7 +5,7 @@ Goal: Complete Docker from beginner to advanced with the best YouTube resources.
 Phase 1 - Docker Basics (Hindi)
 Primary Course: M Prashant - Docker Full Course (Hindi)    
 •	What is Docker?
-•	Problems Docker solves
+•	Problems Docker solves   
 •	Virtual Machine vs Docker
 •	Docker Architecture
 •	Installing Docker
